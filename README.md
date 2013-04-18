@@ -1,4 +1,3 @@
-powerstack-plugins
-==================
+# Powerstack Plugins
 
-Repo containing plguing for Powerstack
+This repo contains plguin that are not included in the core Powerstack distribution.
