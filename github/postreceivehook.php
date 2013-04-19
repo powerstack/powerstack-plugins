@@ -43,7 +43,9 @@ class PostReceiveHook {
     * @return void
     */
     function processPayload() {
-        global $app, $hooks;
+        $app = registry('app');
+        $hooks = registry('hooks');
+
         $payload = $app->params->payload;
         $data = json_decode($payload);
 
