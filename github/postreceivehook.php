@@ -49,70 +49,7 @@ class PostReceiveHook {
         $payload = $app->params->payload;
         $data = json_decode($payload);
 
-        $obj = new \stdclass();
-        $obj->after = $data['after'];
-        $obj->before = $data['before'];
-        $obj->ref = $data['ref'];
-
-        $obj->repository = (object) array(
-            'name' => $data['repository']['name'],
-            'url' => $data['repository']['url'],
-            'pledgie' => $data['repository']['pledgie'],
-            'description' => $data['repository']['description'],
-            'homepage' => $data['repository']['homepage'],
-            'watchers' => $data['repository']['watchers'],
-            'forks' => $data['repository']['forks'],
-            'private' => $data['repository']['private'],
-            'owner' => (object) array(
-                'email' => $data['repository']['owner']['email'],
-                'name' => $data['repository']['owner']['name'],
-            ),
-        );
-
-        $obj->commits = array();
-
-        foreach ($data['commits'] as $commit) {
-            if (!isset($obj->commits[$commit['id']])) {
-                $obj->commits[$commit['id']] = new \stdclass();
-            }
-
-            $obj->commits[$commit['id']]->author = (object) array(
-                'email' => $commit['author']['email'],
-                'name' => $commit['author']['name'],
-                'username' => $commit['author']['username'],
-            );
-
-            $obj->commits[$commit['id']]->distinct = $commit['distinct'];
-            $obj->commits[$commit['id']]->message = $commit['message'];
-            $obj->commits[$commit['id']]->timestamp = $commit['timestamp'];
-            $obj->commits[$commit['id']]->url = $commit['url'];
-
-            if (!empty($commit['added'])) {
-                $obj->commits[$commit['id']]->added = array();
-
-                foreach ($commit['added'] as $added) {
-                    $obj->commits[$commit['id']]->added[] = $added;
-                }
-            }
-
-            if (!empty($commit['modified'])) {
-                $obj->commits[$commit['id']]->modified = array();
-
-                foreach ($commit['modified'] as $modified) {
-                    $obj->commits[$commit['id']]->modified[] = $modified;
-                }
-            }
-
-            if (!empty($commit['removed'])) {
-                $obj->commits[$commit['id']]->removed = array();
-
-                foreach ($commit['removed'] as $removed) {
-                    $obj->commits[$commit['id']]->added[] = $removed;
-                }
-            }
-        }
-
-        $this->data = $obj;
+        $this->data = $data;
 
         if ($hooks->exists('github_post_hook')) {
             $githooks = $hooks->get('github_post_hook');
